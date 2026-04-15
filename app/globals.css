@@ -1,26 +1,143 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Colors */
+  --color-primary: #4500ad;
+  --color-primary-container: #6000e9;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #cdbbff;
+  --color-primary-fixed: #e8ddff;
+  --color-primary-fixed-dim: #cfbdff;
+  --color-inverse-primary: #cfbdff;
+  --color-on-primary-fixed: #22005d;
+  --color-on-primary-fixed-variant: #5300cd;
+
+  /* Secondary Colors */
+  --color-secondary: #0062a0;
+  --color-secondary-container: #32a3fd;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #00375e;
+  --color-secondary-fixed: #d0e4ff;
+  --color-secondary-fixed-dim: #9ccaff;
+  --color-on-secondary-fixed: #001d35;
+  --color-on-secondary-fixed-variant: #00497a;
+
+  /* Tertiary Colors */
+  --color-tertiary: #680079;
+  --color-tertiary-container: #8b0ea0;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #f9a9ff;
+  --color-tertiary-fixed: #ffd6fe;
+  --color-tertiary-fixed-dim: #f9abff;
+  --color-on-tertiary-fixed: #35003f;
+  --color-on-tertiary-fixed-variant: #7b008f;
+
+  /* Surface Colors */
+  --color-background: #faf8fe;
+  --color-on-background: #1a1b1f;
+  --color-surface: #faf8fe;
+  --color-on-surface: #1a1b1f;
+  --color-surface-variant: #e3e2e7;
+  --color-on-surface-variant: #4a4452;
+  --color-surface-bright: #faf8fe;
+  --color-surface-dim: #dad9df;
+  --color-surface-container: #efedf3;
+  --color-surface-container-low: #f4f3f8;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #e9e7ed;
+  --color-surface-container-highest: #e3e2e7;
+  --color-inverse-surface: #2f3034;
+  --color-inverse-on-surface: #f1f0f5;
+  --color-surface-tint: #6d23f9;
+
+  /* Outline Colors */
+  --color-outline: #7b7483;
+  --color-outline-variant: #ccc3d4;
+
+  /* Error Colors */
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* Font Families */
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: var(--color-primary);
+  --color-primary-container: var(--color-primary-container);
+  --color-on-primary: var(--color-on-primary);
+  --color-on-primary-container: var(--color-on-primary-container);
+  --color-primary-fixed: var(--color-primary-fixed);
+  --color-primary-fixed-dim: var(--color-primary-fixed-dim);
+  --color-inverse-primary: var(--color-inverse-primary);
+  --color-on-primary-fixed: var(--color-on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--color-on-primary-fixed-variant);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-container: var(--color-secondary-container);
+  --color-on-secondary: var(--color-on-secondary);
+  --color-on-secondary-container: var(--color-on-secondary-container);
+  --color-secondary-fixed: var(--color-secondary-fixed);
+  --color-secondary-fixed-dim: var(--color-secondary-fixed-dim);
+  --color-on-secondary-fixed: var(--color-on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--color-on-secondary-fixed-variant);
+  --color-tertiary: var(--color-tertiary);
+  --color-tertiary-container: var(--color-tertiary-container);
+  --color-on-tertiary: var(--color-on-tertiary);
+  --color-on-tertiary-container: var(--color-on-tertiary-container);
+  --color-tertiary-fixed: var(--color-tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--color-tertiary-fixed-dim);
+  --color-on-tertiary-fixed: var(--color-on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--color-on-tertiary-fixed-variant);
+  --color-background: var(--color-background);
+  --color-on-background: var(--color-on-background);
+  --color-surface: var(--color-surface);
+  --color-on-surface: var(--color-on-surface);
+  --color-surface-variant: var(--color-surface-variant);
+  --color-on-surface-variant: var(--color-on-surface-variant);
+  --color-surface-bright: var(--color-surface-bright);
+  --color-surface-dim: var(--color-surface-dim);
+  --color-surface-container: var(--color-surface-container);
+  --color-surface-container-low: var(--color-surface-container-low);
+  --color-surface-container-lowest: var(--color-surface-container-lowest);
+  --color-surface-container-high: var(--color-surface-container-high);
+  --color-surface-container-highest: var(--color-surface-container-highest);
+  --color-inverse-surface: var(--color-inverse-surface);
+  --color-inverse-on-surface: var(--color-inverse-on-surface);
+  --color-surface-tint: var(--color-surface-tint);
+  --color-outline: var(--color-outline);
+  --color-outline-variant: var(--color-outline-variant);
+  --color-error: var(--color-error);
+  --color-on-error: var(--color-on-error);
+  --color-error-container: var(--color-error-container);
+  --color-on-error-container: var(--color-on-error-container);
+  --font-sans: var(--font-body);
+  --font-headline: var(--font-headline);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-headline);
+}
+
+/* Material Symbols Outlined font */
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
 }
