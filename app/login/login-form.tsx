@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/app/lib/auth-client";
 
+type UserWithType = {
+  userType?: string | null;
+};
+
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -16,10 +20,9 @@ export function LoginForm() {
     setError("");
     setLoading(true);
 
-    const { error } = await authClient.signIn.email({
+    const { data, error } = await authClient.signIn.email({
       email,
       password,
-      callbackURL: "/",
     });
 
     setLoading(false);
@@ -27,7 +30,12 @@ export function LoginForm() {
     if (error) {
       setError(error.message || "Invalid email or password");
     } else {
-      router.push("/");
+      const user = data?.user as UserWithType | undefined;
+      if (user && !user.userType) {
+        router.push("/onboarding");
+      } else {
+        router.push("/");
+      }
       router.refresh();
     }
   };

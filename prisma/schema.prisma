@@ -6,19 +6,53 @@ datasource db {
   provider = "postgresql"
 }
 
+enum UserType {
+  NGO
+  COMPANY
+  ADMIN
+}
+
 model User {
-  id            String    @id
+  id            String       @id
   name          String?
   email         String
   emailVerified Boolean
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
+  userType      UserType?
+  ngoInfo       NgoInfo?
+  companyInfo   CompanyInfo?
   sessions      Session[]
   accounts      Account[]
 
   @@unique([email])
   @@map("user")
+}
+
+model NgoInfo {
+  id                      String @id
+  userId                  String @unique
+  user                    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ngoName                 String
+  taxIdentificationNumber String
+  contactInfo             String
+  mainGoals               String
+  challenges              String
+
+  @@map("ngo_info")
+}
+
+model CompanyInfo {
+  id                      String @id
+  userId                  String @unique
+  user                    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName             String
+  taxIdentificationNumber String
+  contactInfo             String
+  causesSupported         String
+
+  @@map("company_info")
 }
 
 model Session {

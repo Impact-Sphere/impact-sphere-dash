@@ -21,7 +21,6 @@ export function RegisterForm() {
       name,
       email,
       password,
-      callbackURL: "/",
     });
 
     setLoading(false);
@@ -29,7 +28,7 @@ export function RegisterForm() {
     if (error) {
       setError(error.message || "Failed to create account");
     } else {
-      router.push("/");
+      router.push("/onboarding");
       router.refresh();
     }
   };

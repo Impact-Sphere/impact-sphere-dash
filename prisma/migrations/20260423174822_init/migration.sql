@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "UserType" AS ENUM ('NGO', 'COMPANY', 'ADMIN');
+
 -- CreateTable
 CREATE TABLE "user" (
     "id" TEXT NOT NULL,
@@ -7,8 +10,34 @@ CREATE TABLE "user" (
     "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userType" "UserType",
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ngo_info" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "ngoName" TEXT NOT NULL,
+    "taxIdentificationNumber" TEXT NOT NULL,
+    "contactInfo" TEXT NOT NULL,
+    "mainGoals" TEXT NOT NULL,
+    "challenges" TEXT NOT NULL,
+
+    CONSTRAINT "ngo_info_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "company_info" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "companyName" TEXT NOT NULL,
+    "taxIdentificationNumber" TEXT NOT NULL,
+    "contactInfo" TEXT NOT NULL,
+    "causesSupported" TEXT NOT NULL,
+
+    CONSTRAINT "company_info_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -18,6 +47,8 @@ CREATE TABLE "session" (
     "token" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "ipAddress" TEXT,
+    "userAgent" TEXT,
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "session_pkey" PRIMARY KEY ("id")
@@ -58,7 +89,19 @@ CREATE TABLE "verification" (
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "ngo_info_userId_key" ON "ngo_info"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "company_info_userId_key" ON "company_info"("userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
+
+-- AddForeignKey
+ALTER TABLE "ngo_info" ADD CONSTRAINT "ngo_info_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "company_info" ADD CONSTRAINT "company_info_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
