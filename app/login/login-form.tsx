@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { authClient } from "@/app/lib/auth-client";
 
 type UserWithType = {
@@ -43,10 +43,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <label
-          htmlFor="email"
-          className="text-sm font-medium text-on-surface"
-        >
+        <label htmlFor="email" className="text-sm font-medium text-on-surface">
           Email
         </label>
         <input

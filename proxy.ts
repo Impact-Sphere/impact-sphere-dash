@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
@@ -8,7 +8,7 @@ export function proxy(request: NextRequest) {
   // Protect routes that require authentication
   const protectedPaths = ["/dashboard"];
   const isProtected = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
+    request.nextUrl.pathname.startsWith(path),
   );
 
   if (isProtected && !sessionCookie) {
@@ -19,7 +19,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-  ],
+  matcher: ["/dashboard/:path*"],
 };

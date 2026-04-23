@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { authClient } from "@/app/lib/auth-client";
 import { footerNavItems, navItems } from "@/app/lib/data";
 import { cn } from "@/app/lib/utils";
-import { authClient } from "@/app/lib/auth-client";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -55,12 +55,12 @@ export function Sidebar() {
 
       {/* CTA Button */}
       <div className="pt-6 border-t border-outline-variant/10">
-        <button
-          type="button"
-          className="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-primary-container text-white font-bold text-sm shadow-xl shadow-primary/20 active:scale-95 transition-transform"
+        <Link
+          href="/projects/new"
+          className="block w-full py-4 rounded-xl bg-gradient-to-r from-primary to-primary-container text-white font-bold text-sm shadow-xl shadow-primary/20 active:scale-95 transition-transform text-center"
         >
           Create Project
-        </button>
+        </Link>
       </div>
 
       {/* Footer Navigation */}
@@ -83,7 +83,10 @@ export function Sidebar() {
       <div className="pt-4 border-t border-outline-variant/10 space-y-2">
         {session?.user ? (
           <div className="space-y-2">
-            <div className="flex items-center space-x-3 px-4 py-2">
+            <Link
+              href="/profile"
+              className="flex items-center space-x-3 px-4 py-2 rounded-xl hover:bg-slate-200/50 transition-colors"
+            >
               <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center text-violet-700 font-bold text-sm">
                 {session.user.name?.charAt(0) || session.user.email?.charAt(0)}
               </div>
@@ -95,16 +98,14 @@ export function Sidebar() {
                   {session.user.email}
                 </p>
               </div>
-            </div>
+            </Link>
             <button
               type="button"
               onClick={() => authClient.signOut()}
               className="w-full flex items-center space-x-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 rounded-xl transition-colors"
             >
               <span className="material-symbols-outlined">logout</span>
-              <span className="text-sm font-semibold font-inter">
-                Sign out
-              </span>
+              <span className="text-sm font-semibold font-inter">Sign out</span>
             </button>
           </div>
         ) : (

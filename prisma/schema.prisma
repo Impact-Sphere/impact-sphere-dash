@@ -25,6 +25,8 @@ model User {
   companyInfo   CompanyInfo?
   sessions      Session[]
   accounts      Account[]
+  projects      Project[]
+  donations     Donation[]
 
   @@unique([email])
   @@map("user")
@@ -98,4 +100,40 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model Project {
+  id            String        @id @default(uuid())
+  title         String
+  description   String
+  category      String
+  image         String?
+  targetBudget  Int
+  currentAmount Int           @default(0)
+  status        ProjectStatus @default(ACTIVE)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  ngoId         String
+  ngo           User          @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+  donations     Donation[]
+
+  @@map("project")
+}
+
+model Donation {
+  id        String   @id @default(uuid())
+  amount    Int
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  companyId String
+  company   User     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("donation")
 }

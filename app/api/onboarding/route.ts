@@ -1,7 +1,7 @@
-import { auth } from "@/app/lib/auth";
-import { prisma } from "@/app/lib/db";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { auth } from "@/app/lib/auth";
+import { prisma } from "@/app/lib/db";
 
 export async function POST(request: Request) {
   const session = await auth.api.getSession({
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   if (!["NGO", "COMPANY"].includes(userType)) {
     return NextResponse.json(
       { error: "Invalid user type. Must be NGO or COMPANY." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 

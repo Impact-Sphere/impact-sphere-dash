@@ -8,13 +8,35 @@ export type ProjectCategory =
 export interface Project {
   id: string;
   title: string;
-  category: ProjectCategory;
+  category: string;
   description: string;
-  image: string;
-  funded: number;
-  raised: string;
-  goal: string;
+  image: string | null;
+  targetBudget: number;
+  currentAmount: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  ngoId: string;
+  ngo?: {
+    name: string | null;
+    image: string | null;
+    ngoInfo?: { ngoName: string } | null;
+  };
+  _count?: { donations: number };
+  donations?: DonationItem[];
   featured?: boolean;
+}
+
+export interface DonationItem {
+  id: string;
+  amount: number;
+  createdAt: string;
+  company: {
+    id: string;
+    name: string | null;
+    image: string | null;
+    companyInfo?: { companyName: string } | null;
+  };
 }
 
 export interface NavItem {

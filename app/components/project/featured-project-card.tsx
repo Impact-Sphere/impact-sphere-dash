@@ -1,7 +1,11 @@
-import Image from "next/image";
 import { Badge } from "@/app/components/ui/badge";
 import { Button } from "@/app/components/ui/button";
 import { ProgressBar } from "@/app/components/ui/progress-bar";
+import {
+  formatCurrency,
+  getFundedPercent,
+  getProjectImage,
+} from "@/app/lib/project-utils";
 import { cn } from "@/app/lib/utils";
 import type { Project } from "@/app/types/project";
 
@@ -14,6 +18,8 @@ export function FeaturedProjectCard({
   project,
   className,
 }: FeaturedProjectCardProps) {
+  const funded = getFundedPercent(project.currentAmount, project.targetBudget);
+
   return (
     <article
       className={cn(
@@ -23,13 +29,11 @@ export function FeaturedProjectCard({
     >
       <div className="flex flex-col md:flex-row h-full">
         <div className="md:w-1/2 overflow-hidden relative min-h-[300px] md:min-h-0">
-          <Image
-            src={project.image}
+          {/* biome-ignore lint/performance/noImgElement: user-provided project images may be from any external host */}
+          <img
+            src={getProjectImage(project.image)}
             alt={project.title}
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
         </div>
         <div className="md:w-1/2 p-10 flex flex-col justify-between">
@@ -46,26 +50,28 @@ export function FeaturedProjectCard({
             <div className="space-y-2">
               <div className="flex justify-between items-end">
                 <span className="text-2xl font-black text-primary">
-                  {project.funded}%{" "}
+                  {funded}%{" "}
                   <span className="text-sm font-medium text-on-surface-variant">
                     funded
                   </span>
                 </span>
                 <span className="text-sm font-bold">
-                  {project.raised}{" "}
+                  {formatCurrency(project.currentAmount)}{" "}
                   <span className="text-on-surface-variant font-normal">
-                    of {project.goal}
+                    of {formatCurrency(project.targetBudget)}
                   </span>
                 </span>
               </div>
-              <ProgressBar value={project.funded} size="md" />
+              <ProgressBar value={funded} size="md" />
             </div>
-            <Button
-              size="lg"
-              className="shadow-xl shadow-primary/20 hover:translate-y-[-2px]"
-            >
-              Fund Now
-            </Button>
+            <a href={`/projects/${project.id}`}>
+              <Button
+                size="lg"
+                className="shadow-xl shadow-primary/20 hover:translate-y-[-2px]"
+              >
+                Fund Now
+              </Button>
+            </a>
           </div>
         </div>
       </div>

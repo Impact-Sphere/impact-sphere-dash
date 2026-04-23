@@ -1,7 +1,11 @@
-import Image from "next/image";
 import { Badge } from "@/app/components/ui/badge";
 import { Button } from "@/app/components/ui/button";
 import { ProgressBar } from "@/app/components/ui/progress-bar";
+import {
+  formatCurrency,
+  getFundedPercent,
+  getProjectImage,
+} from "@/app/lib/project-utils";
 import { cn } from "@/app/lib/utils";
 import type { Project } from "@/app/types/project";
 
@@ -24,6 +28,8 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
     }
   };
 
+  const funded = getFundedPercent(project.currentAmount, project.targetBudget);
+
   return (
     <article
       className={cn(
@@ -32,12 +38,11 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
       )}
     >
       <div className="h-48 w-full rounded-xl overflow-hidden mb-6 relative">
-        <Image
-          src={project.image}
+        {/* biome-ignore lint/performance/noImgElement: user-provided project images may be from any external host */}
+        <img
+          src={getProjectImage(project.image)}
           alt={project.title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="w-full h-full object-cover"
         />
       </div>
       <Badge variant={getBadgeVariant(project.category)}>
@@ -50,16 +55,19 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
       <div className="mt-8 space-y-4">
         <div className="space-y-1.5">
           <div className="flex justify-between text-xs font-bold">
-            <span className="text-primary">{project.funded}%</span>
+            <span className="text-primary">{funded}%</span>
             <span className="text-on-surface-variant">
-              {project.raised} / {project.goal}
+              {formatCurrency(project.currentAmount)} /{" "}
+              {formatCurrency(project.targetBudget)}
             </span>
           </div>
-          <ProgressBar value={project.funded} size="sm" />
+          <ProgressBar value={funded} size="sm" />
         </div>
-        <Button variant="secondary" size="lg">
-          Fund Now
-        </Button>
+        <a href={`/projects/${project.id}`}>
+          <Button variant="secondary" size="lg" className="w-full">
+            Fund Now
+          </Button>
+        </a>
       </div>
     </article>
   );

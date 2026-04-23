@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { authClient } from "@/app/lib/auth-client";
 
 type UserWithType = {
@@ -112,9 +112,7 @@ export function OnboardingForm() {
             <span className="material-symbols-outlined text-5xl text-violet-600 mb-4 group-hover:scale-110 transition-transform">
               business
             </span>
-            <h3 className="text-lg font-bold text-on-surface mb-2">
-              Company
-            </h3>
+            <h3 className="text-lg font-bold text-on-surface mb-2">Company</h3>
             <p className="text-sm text-gray-500 text-center">
               I represent a company looking to invest in impact projects
             </p>
@@ -138,7 +136,10 @@ export function OnboardingForm() {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="companyName" className="text-sm font-medium text-on-surface">
+            <label
+              htmlFor="companyName"
+              className="text-sm font-medium text-on-surface"
+            >
               Company Name
             </label>
             <input
@@ -153,7 +154,10 @@ export function OnboardingForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="taxId" className="text-sm font-medium text-on-surface">
+            <label
+              htmlFor="taxId"
+              className="text-sm font-medium text-on-surface"
+            >
               Tax Identification Number
             </label>
             <input
@@ -168,7 +172,10 @@ export function OnboardingForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="contact" className="text-sm font-medium text-on-surface">
+            <label
+              htmlFor="contact"
+              className="text-sm font-medium text-on-surface"
+            >
               Contact (Phone or Email)
             </label>
             <input
@@ -183,7 +190,10 @@ export function OnboardingForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="causes" className="text-sm font-medium text-on-surface">
+            <label
+              htmlFor="causes"
+              className="text-sm font-medium text-on-surface"
+            >
               Causes You Support
             </label>
             <textarea
@@ -211,7 +221,13 @@ export function OnboardingForm() {
             <button
               type="button"
               onClick={() => handleSubmit("COMPANY")}
-              disabled={submitting || !organizationName || !taxIdentificationNumber || !contactInfo || !causesSupported}
+              disabled={
+                submitting ||
+                !organizationName ||
+                !taxIdentificationNumber ||
+                !contactInfo ||
+                !causesSupported
+              }
               className="flex-1 py-2.5 px-4 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {submitting ? "Saving..." : "Finish"}
@@ -226,9 +242,7 @@ export function OnboardingForm() {
     return (
       <div className="space-y-6">
         <div className="text-center space-y-2">
-          <h2 className="text-lg font-semibold text-on-surface">
-            NGO Details
-          </h2>
+          <h2 className="text-lg font-semibold text-on-surface">NGO Details</h2>
           <p className="text-sm text-gray-500">
             Tell us more about your organization
           </p>
@@ -236,7 +250,10 @@ export function OnboardingForm() {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="ngoName" className="text-sm font-medium text-on-surface">
+            <label
+              htmlFor="ngoName"
+              className="text-sm font-medium text-on-surface"
+            >
               NGO Name
             </label>
             <input
@@ -251,7 +268,10 @@ export function OnboardingForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="taxId" className="text-sm font-medium text-on-surface">
+            <label
+              htmlFor="taxId"
+              className="text-sm font-medium text-on-surface"
+            >
               Tax Identification Number
             </label>
             <input
@@ -266,7 +286,10 @@ export function OnboardingForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="contact" className="text-sm font-medium text-on-surface">
+            <label
+              htmlFor="contact"
+              className="text-sm font-medium text-on-surface"
+            >
               Contact (Phone or Email)
             </label>
             <input
@@ -281,7 +304,10 @@ export function OnboardingForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="goals" className="text-sm font-medium text-on-surface">
+            <label
+              htmlFor="goals"
+              className="text-sm font-medium text-on-surface"
+            >
               Main Goals
             </label>
             <textarea
@@ -299,7 +325,10 @@ export function OnboardingForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="challenges" className="text-sm font-medium text-on-surface">
+            <label
+              htmlFor="challenges"
+              className="text-sm font-medium text-on-surface"
+            >
               Challenges
             </label>
             <textarea
@@ -327,7 +356,14 @@ export function OnboardingForm() {
             <button
               type="button"
               onClick={() => handleSubmit("NGO")}
-              disabled={submitting || !organizationName || !taxIdentificationNumber || !contactInfo || !mainGoals || !challenges}
+              disabled={
+                submitting ||
+                !organizationName ||
+                !taxIdentificationNumber ||
+                !contactInfo ||
+                !mainGoals ||
+                !challenges
+              }
               className="flex-1 py-2.5 px-4 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {submitting ? "Saving..." : "Finish"}

@@ -15,9 +15,7 @@ export default function RegisterPage() {
           <h1 className="text-2xl font-bold text-on-surface">
             Create an account
           </h1>
-          <p className="text-sm text-gray-500">
-            Get started with ImpactSphere
-          </p>
+          <p className="text-sm text-gray-500">Get started with ImpactSphere</p>
         </div>
         <RegisterForm />
         <div className="text-center text-sm text-gray-500">

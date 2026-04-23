@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { authClient } from "@/app/lib/auth-client";
 
 export function RegisterForm() {
@@ -36,10 +36,7 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <label
-          htmlFor="name"
-          className="text-sm font-medium text-on-surface"
-        >
+        <label htmlFor="name" className="text-sm font-medium text-on-surface">
           Name
         </label>
         <input
@@ -54,10 +51,7 @@ export function RegisterForm() {
       </div>
 
       <div className="space-y-2">
-        <label
-          htmlFor="email"
-          className="text-sm font-medium text-on-surface"
-        >
+        <label htmlFor="email" className="text-sm font-medium text-on-surface">
           Email
         </label>
         <input
@@ -88,9 +82,7 @@ export function RegisterForm() {
           className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           placeholder="••••••••"
         />
-        <p className="text-xs text-gray-400">
-          Must be at least 8 characters
-        </p>
+        <p className="text-xs text-gray-400">Must be at least 8 characters</p>
       </div>
 
       {error && (
