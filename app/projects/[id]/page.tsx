@@ -3,7 +3,6 @@
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/app/components/ui/badge";
-import { Button } from "@/app/components/ui/button";
 import { ProgressBar } from "@/app/components/ui/progress-bar";
 import { authClient } from "@/app/lib/auth-client";
 import {
@@ -87,7 +86,7 @@ export default function ProjectDetailPage() {
   }
 
   const funded = getFundedPercent(project.currentAmount, project.targetBudget);
-  const isCompany = userType === "COMPANY";
+  const isLoggedIn = !!session?.user;
   const isNgo = userType === "NGO";
   const isOwner = isNgo && session?.user?.id === project.ngoId;
 
@@ -154,14 +153,17 @@ export default function ProjectDetailPage() {
             so far
           </p>
 
-          {isCompany && project.status === "ACTIVE" && (
-            <Button
-              size="lg"
-              className="w-full md:w-auto"
+          {isLoggedIn && project.status === "ACTIVE" && (
+            <button
+              type="button"
               onClick={() => setDonateOpen(true)}
+              className="flex items-center justify-center space-x-3 w-full md:w-auto bg-primary hover:bg-primary-container text-on-primary px-10 py-5 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-primary/30 active:scale-95"
             >
-              Donate Now
-            </Button>
+              <span className="material-symbols-outlined text-2xl transition-transform hover:scale-110">
+                favorite
+              </span>
+              <span>Donate Now</span>
+            </button>
           )}
 
           {isOwner && (

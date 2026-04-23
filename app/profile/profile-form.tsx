@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { ImageUploadField } from "@/app/components/ui/image-upload-field";
 import { authClient } from "@/app/lib/auth-client";
 import { cn } from "@/app/lib/utils";
 import { UserProjects } from "./user-projects";
@@ -223,15 +224,43 @@ export function ProfileForm() {
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-6">
             <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-violet-100 flex items-center justify-center text-3xl font-bold text-violet-700">
-              {avatarUrl ? (
+              {avatarUrl || image ? (
                 // biome-ignore lint/performance/noImgElement: user-provided avatar URLs may be external
                 <img
-                  src={avatarUrl}
+                  src={image || avatarUrl}
                   alt="Avatar"
                   className="w-full h-full object-cover"
                 />
               ) : (
                 initials
+              )}
+              {isEditing && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.accept = "image/*";
+                    input.onchange = async (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (!file) return;
+                      const formData = new FormData();
+                      formData.append("file", file);
+                      const res = await fetch("/api/upload", {
+                        method: "POST",
+                        body: formData,
+                      });
+                      const data = await res.json();
+                      if (data.url) setImage(data.url);
+                    };
+                    input.click();
+                  }}
+                  className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity"
+                >
+                  <span className="material-symbols-outlined text-white text-xl">
+                    photo_camera
+                  </span>
+                </button>
               )}
             </div>
             <div className="space-y-2">
@@ -318,17 +347,16 @@ export function ProfileForm() {
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-2">
               <div className="text-sm font-medium text-on-surface">
-                Profile Image URL
+                Profile Photo
               </div>
               {isEditing ? (
-                <input
-                  type="text"
+                <ImageUploadField
                   value={image}
-                  onChange={(e) => setImage(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="https://..."
+                  onChange={setImage}
+                  label="Upload profile photo"
+                  previewClassName="w-32 h-32 rounded-2xl object-cover"
                 />
               ) : (
                 <p className="text-gray-700">{profile.image || "—"}</p>

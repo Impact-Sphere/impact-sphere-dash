@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ImageUploadField } from "@/app/components/ui/image-upload-field";
 import { authClient } from "@/app/lib/auth-client";
 
 const CATEGORY_OPTIONS = [
@@ -140,14 +141,12 @@ export default function NewProjectPage() {
 
             <div className="space-y-2">
               <div className="text-sm font-medium text-on-surface">
-                Cover Image URL
+                Cover Image
               </div>
-              <input
-                type="text"
+              <ImageUploadField
                 value={image}
-                onChange={(e) => setImage(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="https://example.com/image.jpg"
+                onChange={setImage}
+                label="Upload cover image"
               />
               <p className="text-xs text-gray-400">
                 Optional. Leave blank for a default image.

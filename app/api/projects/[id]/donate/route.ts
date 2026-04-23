@@ -15,18 +15,6 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { userType: true },
-  });
-
-  if (user?.userType !== "COMPANY") {
-    return NextResponse.json(
-      { error: "Only companies can donate" },
-      { status: 403 },
-    );
-  }
-
   const { id } = await params;
   const body = await request.json();
   const { amount } = body;
