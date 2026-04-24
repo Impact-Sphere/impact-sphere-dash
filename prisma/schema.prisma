@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserType {
+  NGO
+  COMPANY
+  ADMIN
+}
+
+model User {
+  id            String       @id
+  name          String?
+  email         String
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  userType      UserType?
+  ngoInfo       NgoInfo?
+  companyInfo   CompanyInfo?
+  sessions      Session[]
+  accounts      Account[]
+  projects      Project[]
+  donations     Donation[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model NgoInfo {
+  id                      String @id
+  userId                  String @unique
+  user                    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ngoName                 String
+  taxIdentificationNumber String
+  contactInfo             String
+  mainGoals               String
+  challenges              String
+
+  @@map("ngo_info")
+}
+
+model CompanyInfo {
+  id                      String @id
+  userId                  String @unique
+  user                    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName             String
+  taxIdentificationNumber String
+  contactInfo             String
+  causesSupported         String
+
+  @@map("company_info")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model Project {
+  id            String        @id @default(uuid())
+  title         String
+  description   String
+  category      String
+  image         String?
+  targetBudget  Int
+  currentAmount Int           @default(0)
+  status        ProjectStatus @default(ACTIVE)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  ngoId         String
+  ngo           User          @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+  donations     Donation[]
+
+  @@map("project")
+}
+
+model Donation {
+  id        String   @id @default(uuid())
+  amount    Int
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  companyId String
+  company   User     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("donation")
+}
