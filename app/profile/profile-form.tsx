@@ -286,7 +286,10 @@ export function ProfileForm() {
           {!isEditing && (
             <button
               type="button"
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                setActiveTab("details");
+                setIsEditing(true);
+              }}
               className="flex items-center space-x-2 px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors"
             >
               <span className="material-symbols-outlined text-[18px]">
@@ -307,19 +310,6 @@ export function ProfileForm() {
       {/* Projects Tab */}
       {activeTab === "projects" && (
         <div className="space-y-6">
-          {profile.userType === "NGO" && (
-            <div className="flex justify-end">
-              <a
-                href="/projects/new"
-                className="inline-flex items-center space-x-2 px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  add
-                </span>
-                <span>Create Project</span>
-              </a>
-            </div>
-          )}
           {(profile.userType === "NGO" || profile.userType === "COMPANY") && (
             <UserProjects userType={profile.userType} />
           )}
