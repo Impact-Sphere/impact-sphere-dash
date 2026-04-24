@@ -4,10 +4,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { authClient } from "@/app/lib/auth-client";
 
-type UserWithType = {
-  userType?: string | null;
-};
-
 type Step = "select-type" | "ngo-details" | "company-details";
 
 export function OnboardingForm() {
@@ -26,10 +22,19 @@ export function OnboardingForm() {
   useEffect(() => {
     if (!isPending && !session) {
       router.push("/login");
+      return;
     }
-    const user = session?.user as UserWithType | undefined;
-    if (!isPending && user?.userType) {
-      router.push("/");
+
+    const checkOnboarding = async () => {
+      const res = await fetch("/api/onboarding");
+      const data = await res.json();
+      if (!data.needsOnboarding) {
+        router.push("/");
+      }
+    };
+
+    if (!isPending && session) {
+      checkOnboarding();
     }
   }, [session, isPending, router]);
 

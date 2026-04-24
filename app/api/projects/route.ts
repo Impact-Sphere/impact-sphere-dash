@@ -56,7 +56,14 @@ export async function GET(request: Request) {
         },
         orderBy: { createdAt: "desc" },
       });
-      const projects = donations.map((d) => d.project);
+      const seen = new Set();
+      const projects = donations
+        .map((d) => d.project)
+        .filter((p) => {
+          if (seen.has(p.id)) return false;
+          seen.add(p.id);
+          return true;
+        });
       return NextResponse.json(projects);
     }
 

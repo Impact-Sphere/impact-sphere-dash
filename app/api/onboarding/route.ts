@@ -4,6 +4,44 @@ import { NextResponse } from "next/server";
 import { auth } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/db";
 
+export async function GET() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    include: {
+      ngoInfo: true,
+      companyInfo: true,
+    },
+  });
+
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  let needsOnboarding = false;
+
+  if (!user.userType) {
+    needsOnboarding = true;
+  } else if (user.userType === "COMPANY" && user.companyInfo) {
+    if (!user.companyInfo.companyName || !user.companyInfo.taxIdentificationNumber || !user.companyInfo.contactInfo || !user.companyInfo.causesSupported) {
+      needsOnboarding = true;
+    }
+  } else if (user.userType === "NGO" && user.ngoInfo) {
+    if (!user.ngoInfo.ngoName || !user.ngoInfo.taxIdentificationNumber || !user.ngoInfo.contactInfo || !user.ngoInfo.mainGoals || !user.ngoInfo.challenges) {
+      needsOnboarding = true;
+    }
+  }
+
+  return NextResponse.json({ needsOnboarding });
+}
+
 export async function POST(request: Request) {
   const session = await auth.api.getSession({
     headers: await headers(),

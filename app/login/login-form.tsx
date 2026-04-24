@@ -4,10 +4,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { authClient } from "@/app/lib/auth-client";
 
-type UserWithType = {
-  userType?: string | null;
-};
-
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -30,8 +26,9 @@ export function LoginForm() {
     if (error) {
       setError(error.message || "Invalid email or password");
     } else {
-      const user = data?.user as UserWithType | undefined;
-      if (user && !user.userType) {
+      const onRes = await fetch("/api/onboarding");
+      const onData = await onRes.json();
+      if (onData.needsOnboarding) {
         router.push("/onboarding");
       } else {
         router.push("/");
