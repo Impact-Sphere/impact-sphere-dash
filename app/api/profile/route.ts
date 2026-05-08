@@ -57,44 +57,42 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  await prisma.$transaction(async (tx) => {
-    await tx.user.update({
-      where: { id: session.user.id },
+  await prisma.user.update({
+    where: { id: session.user.id },
+    data: {
+      ...(name !== undefined && { name }),
+      ...(image !== undefined && { image }),
+    },
+  });
+
+  if (user.userType === "COMPANY" && user.companyInfo) {
+    await prisma.companyInfo.update({
+      where: { userId: session.user.id },
       data: {
-        ...(name !== undefined && { name }),
-        ...(image !== undefined && { image }),
+        ...(organizationName !== undefined && {
+          companyName: organizationName,
+        }),
+        ...(taxIdentificationNumber !== undefined && {
+          taxIdentificationNumber,
+        }),
+        ...(contactInfo !== undefined && { contactInfo }),
+        ...(causesSupported !== undefined && { causesSupported }),
       },
     });
-
-    if (user.userType === "COMPANY" && user.companyInfo) {
-      await tx.companyInfo.update({
-        where: { userId: session.user.id },
-        data: {
-          ...(organizationName !== undefined && {
-            companyName: organizationName,
-          }),
-          ...(taxIdentificationNumber !== undefined && {
-            taxIdentificationNumber,
-          }),
-          ...(contactInfo !== undefined && { contactInfo }),
-          ...(causesSupported !== undefined && { causesSupported }),
-        },
-      });
-    } else if (user.userType === "NGO" && user.ngoInfo) {
-      await tx.ngoInfo.update({
-        where: { userId: session.user.id },
-        data: {
-          ...(organizationName !== undefined && { ngoName: organizationName }),
-          ...(taxIdentificationNumber !== undefined && {
-            taxIdentificationNumber,
-          }),
-          ...(contactInfo !== undefined && { contactInfo }),
-          ...(mainGoals !== undefined && { mainGoals }),
-          ...(challenges !== undefined && { challenges }),
-        },
-      });
-    }
-  });
+  } else if (user.userType === "NGO" && user.ngoInfo) {
+    await prisma.ngoInfo.update({
+      where: { userId: session.user.id },
+      data: {
+        ...(organizationName !== undefined && { ngoName: organizationName }),
+        ...(taxIdentificationNumber !== undefined && {
+          taxIdentificationNumber,
+        }),
+        ...(contactInfo !== undefined && { contactInfo }),
+        ...(mainGoals !== undefined && { mainGoals }),
+        ...(challenges !== undefined && { challenges }),
+      },
+    });
+  }
 
   return NextResponse.json({ success: true });
 }

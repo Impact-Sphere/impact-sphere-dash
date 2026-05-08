@@ -50,29 +50,32 @@ export async function POST(
 
   const donationAmount = Number(amount);
 
-  await prisma.$transaction(async (tx) => {
-    await tx.donation.create({
-      data: {
-        amount: donationAmount,
-        projectId: id,
-        companyId: session.user.id,
-      },
-    });
-
-    const updatedProject = await tx.project.update({
-      where: { id },
-      data: {
-        currentAmount: { increment: donationAmount },
-      },
-    });
-
-    if (updatedProject.currentAmount >= updatedProject.targetBudget) {
-      await tx.project.update({
-        where: { id },
-        data: { status: "COMPLETED" },
-      });
-    }
+  await prisma.donation.create({
+    data: {
+      amount: donationAmount,
+      projectId: id,
+      companyId: session.user.id,
+    },
   });
+
+  await prisma.project.update({
+    where: { id },
+    data: {
+      currentAmount: { increment: donationAmount },
+    },
+  });
+
+  const updatedProject = await prisma.project.findUnique({
+    where: { id },
+    select: { currentAmount: true, targetBudget: true },
+  });
+
+  if (updatedProject && updatedProject.currentAmount >= updatedProject.targetBudget) {
+    await prisma.project.update({
+      where: { id },
+      data: { status: "COMPLETED" },
+    });
+  }
 
   return NextResponse.json({ success: true });
 }

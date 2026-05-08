@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { auth } from "@/app/lib/auth";
@@ -69,37 +68,35 @@ export async function POST(request: Request) {
     );
   }
 
-  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-    await tx.user.update({
-      where: { id: session.user.id },
-      data: { userType, approvalStatus: "PENDING" },
-    });
-
-    if (userType === "COMPANY") {
-      await tx.companyInfo.create({
-        data: {
-          id: crypto.randomUUID(),
-          userId: session.user.id,
-          companyName: organizationName || "",
-          taxIdentificationNumber: taxIdentificationNumber || "",
-          contactInfo: contactInfo || "",
-          causesSupported: causesSupported || "",
-        },
-      });
-    } else if (userType === "NGO") {
-      await tx.ngoInfo.create({
-        data: {
-          id: crypto.randomUUID(),
-          userId: session.user.id,
-          ngoName: organizationName || "",
-          taxIdentificationNumber: taxIdentificationNumber || "",
-          contactInfo: contactInfo || "",
-          mainGoals: mainGoals || "",
-          challenges: challenges || "",
-        },
-      });
-    }
+  await prisma.user.update({
+    where: { id: session.user.id },
+    data: { userType, approvalStatus: "PENDING" },
   });
+
+  if (userType === "COMPANY") {
+    await prisma.companyInfo.create({
+      data: {
+        id: crypto.randomUUID(),
+        userId: session.user.id,
+        companyName: organizationName || "",
+        taxIdentificationNumber: taxIdentificationNumber || "",
+        contactInfo: contactInfo || "",
+        causesSupported: causesSupported || "",
+      },
+    });
+  } else if (userType === "NGO") {
+    await prisma.ngoInfo.create({
+      data: {
+        id: crypto.randomUUID(),
+        userId: session.user.id,
+        ngoName: organizationName || "",
+        taxIdentificationNumber: taxIdentificationNumber || "",
+        contactInfo: contactInfo || "",
+        mainGoals: mainGoals || "",
+        challenges: challenges || "",
+      },
+    });
+  }
 
   return NextResponse.json({ success: true });
 }
