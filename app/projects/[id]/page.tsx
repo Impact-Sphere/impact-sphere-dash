@@ -2,15 +2,10 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
 import { Badge } from "@/app/components/ui/badge";
 import { ProgressBar } from "@/app/components/ui/progress-bar";
 import { authClient } from "@/app/lib/auth-client";
-import {
-  formatCurrency,
-  getFundedPercent,
-  getNgoName,
-  getProjectImage,
-} from "@/app/lib/project-utils";
 import {
   createDefaultSlot,
   getEndMinTimeForDate,
@@ -20,9 +15,14 @@ import {
   getStartMinTimeForDate,
   mergeContiguousSlots,
 } from "@/app/lib/meetings-utils";
-import type { Project } from "@/app/types/project";
+import {
+  formatCurrency,
+  getFundedPercent,
+  getNgoName,
+  getProjectImage,
+} from "@/app/lib/project-utils";
 import type { MeetingRequest, TimeSlot } from "@/app/types/meeting";
-import DatePicker from "react-datepicker";
+import type { Project } from "@/app/types/project";
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function ProjectDetailPage() {
@@ -66,15 +66,17 @@ export default function ProjectDetailPage() {
       if (existing) {
         setExistingRequest(existing);
         if (existing.proposedTimes && existing.proposedTimes.length > 0) {
-          const convertedTimes = existing.proposedTimes.map((slot: any) => {
-            const startDate = new Date(slot.start);
-            const endDate = new Date(slot.end);
+          const convertedTimes = existing.proposedTimes.map(
+            (slot: TimeSlot) => {
+              const startDate = new Date(slot.start);
+              const endDate = new Date(slot.end);
 
-            return {
-              start: startDate.toISOString(),
-              end: endDate.toISOString(),
-            };
-          });
+              return {
+                start: startDate.toISOString(),
+                end: endDate.toISOString(),
+              };
+            },
+          );
           setMeetingTimes(mergeContiguousSlots(convertedTimes));
         }
         if (existing.notes) {
@@ -402,7 +404,8 @@ export default function ProjectDetailPage() {
         {isLoggedIn && isCompany && (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-4">
             <h2 className="text-lg font-semibold text-on-surface">
-              Want to know better the project before donating? Request a meeting!
+              Want to know better the project before donating? Request a
+              meeting!
             </h2>
             {loadingRequest ? (
               <div className="flex items-center justify-center py-6">
@@ -529,7 +532,7 @@ export default function ProjectDetailPage() {
 
                   return (
                     <div
-                      key={index}
+                      key={`${slot.start}-${slot.end}`}
                       className={`p-4 rounded-xl border ${
                         invalid
                           ? "border-red-300 bg-red-50"

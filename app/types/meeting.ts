@@ -1,8 +1,12 @@
-export type MeetingRequestStatus = "PENDING" | "APPROVED" | "REJECTED" | "SCHEDULED" | "CANCELLED";
-
+export type MeetingRequestStatus =
+  | "PENDING"
+  | "APPROVED"
+  | "REJECTED"
+  | "SCHEDULED"
+  | "CANCELLED";
 
 export interface TimeSlot {
-  start: string; 
+  start: string;
   end: string;
 }
 
@@ -26,7 +30,7 @@ export interface MeetingRequest {
   };
   requestedAt: string;
   status: MeetingRequestStatus;
-  proposedTimes: TimeSlot[] ;
+  proposedTimes: TimeSlot[];
   selectedTime: string | null;
   notes: string | null;
   createdAt: string;

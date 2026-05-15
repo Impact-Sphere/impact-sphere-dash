@@ -89,7 +89,8 @@ export const mergeContiguousSlots = (slots: TimeSlot[] = []) => {
       return merged;
     }
 
-    return [...merged, current];
+    merged.push(current);
+    return merged;
   }, []);
 };
 

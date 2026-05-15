@@ -5,8 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 import { ImageUploadField } from "@/app/components/ui/image-upload-field";
 import { authClient } from "@/app/lib/auth-client";
 import { cn } from "@/app/lib/utils";
-import { UserProjects } from "./user-projects";
 import { Meetings } from "./project-meetings";
+import { UserProjects } from "./user-projects";
 
 type ProfileData = {
   id: string;
@@ -37,7 +37,7 @@ export function ProfileForm() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "projects" | "meetings" | "details" 
+    "projects" | "meetings" | "details"
   >("projects");
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -94,7 +94,7 @@ export function ProfileForm() {
 
   useEffect(() => {
     const tab = searchParams.get("tab");
-    if (tab === "projects" || tab === "meetings" || tab === "details" ) {
+    if (tab === "projects" || tab === "meetings" || tab === "details") {
       setActiveTab(tab);
     }
   }, [searchParams]);
@@ -207,7 +207,7 @@ export function ProfileForm() {
     label,
     icon,
   }: {
-    tab: "projects" | "meetings" | "details" ;
+    tab: "projects" | "meetings" | "details";
     label: string;
     icon: string;
   }) => (
@@ -314,7 +314,11 @@ export function ProfileForm() {
       <div className="flex items-center space-x-2">
         <TabButton tab="projects" label="Projects" icon="grid_view" />
         {(profile.userType === "NGO" || profile.userType === "COMPANY") && (
-          <TabButton tab="meetings" label="Meeting Requests" icon="calendar_month"/>
+          <TabButton
+            tab="meetings"
+            label="Meeting Requests"
+            icon="calendar_month"
+          />
         )}
         <TabButton tab="details" label="Organization Details" icon="badge" />
       </div>
@@ -329,9 +333,7 @@ export function ProfileForm() {
       )}
 
       {/* Meetings Tab */}
-      {activeTab === "meetings" && (
-        <Meetings userType={profile.userType}/>
-      )}
+      {activeTab === "meetings" && <Meetings userType={profile.userType} />}
 
       {/* Details Tab */}
       {activeTab === "details" && (

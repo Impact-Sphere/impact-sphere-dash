@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/db";
 
@@ -71,7 +71,11 @@ export async function PUT(
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const updateData: Record<string, any> = {};
+    const updateData: Partial<{
+      status: (typeof VALID_STATUSES)[number];
+      selectedTime: Date;
+      notes: string | null;
+    }> = {};
 
     if (canUpdateAsNgoOrAdmin) {
       if (status) updateData.status = status;
@@ -92,11 +96,13 @@ export async function PUT(
         });
 
         await prisma.meetingTimeSlot.createMany({
-          data: (proposedTimes || []).map((slot: any) => ({
-            meetingId: id,
-            start: new Date(slot.start),
-            end: new Date(slot.end),
-          })),
+          data: (proposedTimes || []).map(
+            (slot: { start: string; end: string }) => ({
+              meetingId: id,
+              start: new Date(slot.start),
+              end: new Date(slot.end),
+            }),
+          ),
         });
       }
 
@@ -125,7 +131,7 @@ export async function PUT(
         company: {
           include: { companyInfo: true },
         },
-        proposedTimes: true, 
+        proposedTimes: true,
       },
     });
 
@@ -141,7 +147,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {

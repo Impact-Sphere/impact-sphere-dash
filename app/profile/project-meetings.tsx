@@ -310,9 +310,9 @@ export function Meetings({
 
                 {/* PROPOSED SLOTS */}
                 <div className="max-h-52 overflow-y-auto space-y-2 pr-2">
-                  {req.proposedTimes?.map((slot, i) => (
+                  {req.proposedTimes?.map((slot) => (
                     <div
-                      key={i}
+                      key={`${slot.start}-${slot.end}`}
                       className="text-sm text-gray-600 bg-gray-50 rounded-lg p-2"
                     >
                       <div>Start: {formatUserLocal(slot.start)}</div>
@@ -345,6 +345,7 @@ export function Meetings({
                   {userType === "COMPANY" && req.status !== "SCHEDULED" && (
                     <>
                       <button
+                        type="button"
                         onClick={() => {
                           setEditingRequest(req);
 
@@ -364,6 +365,7 @@ export function Meetings({
                       </button>
 
                       <button
+                        type="button"
                         onClick={() => handleCancelMeeting(req.id)}
                         className="flex-1 flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-on-primary px-6 py-2 rounded-lg text-sm font-medium transition-colors"
                       >
@@ -374,6 +376,7 @@ export function Meetings({
 
                   {userType === "NGO" && req.status !== "SCHEDULED" && (
                     <button
+                      type="button"
                       onClick={() => {
                         setSchedulingRequest({
                           ...req,
@@ -425,7 +428,7 @@ export function Meetings({
 
                   return (
                     <div
-                      key={index}
+                      key={`${slot.start}-${slot.end}`}
                       className={`p-4 rounded-xl border ${
                         invalid
                           ? "border-red-300 bg-red-50"
@@ -730,6 +733,7 @@ export function Meetings({
 
             <div className="flex gap-3">
               <button
+                type="button"
                 onClick={() => setSchedulingRequest(null)}
                 className="flex-1 py-2.5 px-4 border border-gray-200 text-gray-600 font-medium rounded-lg hover:bg-gray-50 transition-colors"
               >
@@ -737,6 +741,7 @@ export function Meetings({
               </button>
 
               <button
+                type="button"
                 onClick={handleConfirmSchedule}
                 disabled={!selectedMeetingStart}
                 className="flex-1 flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-on-primary px-6 py-2 rounded-lg text-sm font-medium transition-colors"

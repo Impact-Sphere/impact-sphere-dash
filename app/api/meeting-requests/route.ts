@@ -1,27 +1,38 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { headers } from "next/headers";
+import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/db";
 
-const VALID_STATUSES = ["PENDING", "APPROVED", "REJECTED", "SCHEDULED"] as const;
+const VALID_STATUSES = [
+  "PENDING",
+  "APPROVED",
+  "REJECTED",
+  "SCHEDULED",
+] as const;
 type MeetingRequestStatus = (typeof VALID_STATUSES)[number];
 
 export async function POST(request: NextRequest) {
   try {
     const session = await auth.api.getSession({
-        headers: await headers(),
+      headers: await headers(),
     });
 
     if (!session) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { projectId, proposedTimes, notes } = await request.json();
+    const requestBody = (await request.json()) as {
+      projectId?: string;
+      proposedTimes?: { start: string; end: string }[];
+      notes?: string;
+    };
+    const { projectId, proposedTimes, notes } = requestBody;
 
     if (!projectId || !Array.isArray(proposedTimes)) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -41,7 +52,7 @@ export async function POST(request: NextRequest) {
         notes: typeof notes === "string" ? notes.trim() : notes,
 
         proposedTimes: {
-          create: proposedTimes.map((slot: any) => ({
+          create: proposedTimes.map((slot: { start: string; end: string }) => ({
             start: new Date(slot.start),
             end: new Date(slot.end),
           })),
@@ -65,7 +76,7 @@ export async function POST(request: NextRequest) {
     console.error("Error creating meeting request:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -73,29 +84,29 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const session = await auth.api.getSession({
-        headers: await headers(),
+      headers: await headers(),
     });
 
     if (!session) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        include: {
+      where: { id: session.user.id },
+      include: {
         ngoInfo: true,
         companyInfo: true,
-        },
+      },
     });
 
     if (!user) {
-        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status") as MeetingRequestStatus | null;
 
-    let where: any = {};
+    const where: Prisma.MeetingRequestWhereInput = {};
 
     if (user.userType === "COMPANY") {
       where.companyId = user.id;
@@ -133,7 +144,7 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching meeting requests:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
